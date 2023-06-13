@@ -1,19 +1,20 @@
 class Logic:
     
     def __init__(self):
-        board = [
-                    ["bB","bB","bB","bQ","bK","bB","bB","bB"],
+        self.board = [
+                    ["bR","bN","bB","bQ","bK","bB","bN","bR"],
                     ["bP","bP","bP","bP","bP","bP","bP","bP"],
                     ["--","--","--","--","--","--","--","--"],
                     ["--","--","--","--","--","--","--","--"],
                     ["--","--","--","--","--","--","--","--"],
                     ["--","--","--","--","--","--","--","--"],
-                    ["--","--","--","--","--","--","--","--"],
                     ["wP","wP","wP","wP","wP","wP","wP","wP"],
-                    ["wB","wB","wB","wQ","wK","wB","wB","wB"]
+                    ["wR","wN","wB","wQ","wK","wB","wN","wR"]
                 ]
-        print(board)
+        self.white_to_move = True
+        self.move_log = []
+        #print(self.board)
     
     
     ## Run Code here for now 
-    __init__(self=None)
+    #__init__(self=None)

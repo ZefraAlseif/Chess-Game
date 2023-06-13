@@ -10,4 +10,4 @@
 
 > Introduce proper movements for each piece on the bord for both black and white [Pending]
 
-> Introduce the ability to deliver checks
+> Introduce the ability to deliver checks [Pending]
