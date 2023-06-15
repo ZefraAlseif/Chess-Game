@@ -1,5 +1,6 @@
 import pygame as p
 from logic import Logic
+from logic import Move
 
 p.init()
 WIDTH = HEIGHT = 512  # Resolution of the screen
@@ -10,7 +11,7 @@ IMAGES = {}
 
 
 # Initialize a global dictionary of images
-def load_images():
+def loadImages():
     pieces = ["wR", "wN", "wB", "wQ", "wK", "bR", "bN", "bB", "bQ", "bK", "wP", "bP"]
     for piece in pieces:
         IMAGES[piece] = p.transform.scale(
@@ -29,12 +30,30 @@ def main():
     clock = p.time.Clock()
     screen.fill(p.Color("white"))
     game_state = Logic()
-    load_images()
+    loadImages()
     running = True
+    sq_selected = () # no square is selected
+    player_clicks = [] # keep tracks of player clicks
     while running:
         for e in p.event.get():
             if e.type == p.QUIT:
                 running = False
+            elif e.type == p.MOUSEBUTTONDOWN:
+                location = p.mouse.get_pos() #(x,y) location of mouse
+                col = location[0] // SQ_SIZE
+                row = location[1] // SQ_SIZE
+                if sq_selected == (row,col): # clicked the same square twice
+                    sq_selected = () # corresponds to undo click
+                    player_clicks = [] #clear
+                else:    
+                    sq_selected = (row,col)
+                    player_clicks.append(sq_selected) # append for both clicks
+                if len(player_clicks) == 2: # two clicks have occured
+                    move = Move(player_clicks[0],player_clicks[1],game_state.board)
+                    print(move.getChessNotation())
+                    game_state.makeMove(move)
+                    sq_selected = () #reset user clicks
+                    player_clicks = []
         drawGameState(screen, game_state)
         clock.tick(MAX_FPS)
         p.display.flip()
@@ -56,7 +75,6 @@ def drawBoard(screen):
         for c in range(DIMENSION):
             color = colors[((r + c) % 2)]
             p.draw.rect(screen, color, p.Rect(c * SQ_SIZE, r * SQ_SIZE, SQ_SIZE, SQ_SIZE))
-
 
 def drawPieces(screen, board):
     for r in range(DIMENSION):
