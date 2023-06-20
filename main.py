@@ -30,6 +30,8 @@ def main():
     clock = p.time.Clock()
     screen.fill(p.Color("white"))
     game_state = Logic()
+    valid_moves = game_state.validMoves()
+    move_made = False #flag variable for when a move is made
     loadImages()
     running = True
     sq_selected = () # no square is selected
@@ -38,7 +40,8 @@ def main():
         for e in p.event.get():
             if e.type == p.QUIT:
                 running = False
-            elif e.type == p.MOUSEBUTTONDOWN:
+            # handles mouse click   
+            elif e.type == p.MOUSEBUTTONDOWN: 
                 location = p.mouse.get_pos() #(x,y) location of mouse
                 col = location[0] // SQ_SIZE
                 row = location[1] // SQ_SIZE
@@ -51,9 +54,18 @@ def main():
                 if len(player_clicks) == 2: # two clicks have occured
                     move = Move(player_clicks[0],player_clicks[1],game_state.board)
                     print(move.getChessNotation())
-                    game_state.makeMove(move)
+                    if move in valid_moves:
+                        game_state.makeMove(move)
+                        move_made = True
                     sq_selected = () #reset user clicks
                     player_clicks = []
+            # handles key presses
+            elif e.type == p.KEYDOWN and e.key == p.K_z:
+                game_state.undoMove() # undo move when z is pressed
+                move_made = True
+        if move_made:
+            valid_moves = game_state.validMoves()
+            move_made = True
         drawGameState(screen, game_state)
         clock.tick(MAX_FPS)
         p.display.flip()
