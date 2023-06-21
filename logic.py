@@ -69,29 +69,76 @@ class Logic():
     
     # Get all rook moves
     def getRookMoves(self,r,c,possible_moves):
-        pass                    
+        directions = ((-1,0),(0,-1),(1,0),(0,1)) # directions the piece can move
+        enemycolor = "b" if self.white_to_move else "w" # check the enemy pieces
+        for d in directions:
+            for i in range(1,8):
+                end_row = r + d[0] * i
+                end_col = c + d[1] * i
+                if 0 <= end_row < 8 and 0 <= end_col < 8:
+                    end_piece = self.board[end_row][end_col]
+                    if end_piece == "--": # empty space on board  
+                        possible_moves.append(Move((r,c),(end_row,end_col),self.board))
+                    elif end_piece[0] == enemycolor: # enemy piece 
+                        possible_moves.append(Move((r,c),(end_row,end_col),self.board)) 
+                        break;
+                    else: # friendly piece 
+                        break;
+                else: # out of the board
+                    break;                
     
     # Get all Knight moves
     def getKnightMoves(self,r,c,possible_moves):
-        pass
-    
+        directions = ((1,2),(2,1),(2,-1),(1,-2),(-1,-2),(-2,-1),(-2,1),(-1,2))
+        enemycolor = "b" if self.white_to_move else "w"
+        for d in directions:
+            end_row = r + d[0] 
+            end_col = c + d[1] 
+            if 0 <= end_row < 8 and 0 <= end_col < 8:
+                end_piece = self.board[end_row][end_col]
+                if end_piece == "--" or end_piece[0] == enemycolor:
+                    possible_moves.append(Move((r,c),(end_row,end_col),self.board))
+
     # Get all Bishop Moves
     def getBishopMoves(self,r,c,possible_moves):
-        pass
+        directions = ((-1,1),(1,-1),(1,1),(-1,-1)) # directions the piece can move
+        enemycolor = "b" if self.white_to_move else "w" # check the enemy pieces
+        for d in directions:
+            for i in range(1,8):
+                end_row = r + d[0] * i
+                end_col = c + d[1] * i
+                if 0 <= end_row < 8 and 0 <= end_col < 8:
+                    end_piece = self.board[end_row][end_col]
+                    if end_piece == "--": # empty space on board  
+                        possible_moves.append(Move((r,c),(end_row,end_col),self.board))
+                    elif end_piece[0] == enemycolor: # enemy piece 
+                        possible_moves.append(Move((r,c),(end_row,end_col),self.board)) 
+                        break;
+                    else: # friendly piece 
+                        break;
+                else: # out of the board
+                    break;            
     
     # Get all Queen Moves
     def getQueenMoves(self,r,c,possible_moves):
         self.getRookMoves(r,c,possible_moves)
         self.getBishopMoves(r,c,possible_moves)
     
-    # Get all King Moves
+    # Get all King Moves (without checks)
     def getKingMoves(self,r,c,possible_moves):
-        pass
-    
+        directions = ((-1,0),(0,-1),(1,0),(0,1),(-1,1),(1,-1),(1,1),(-1,-1))
+        enemycolor = "b" if self.white_to_move else "w" # check the enemy pieces
+        for d in directions:
+            end_row = r + d[0] 
+            end_col = c + d[1]
+            if 0 <= end_row < 8 and 0 <= end_col < 8:
+                end_piece = self.board[end_row][end_col]
+                if end_piece == "--" or end_piece[0] == enemycolor: # empty space on board  
+                    possible_moves.append(Move((r,c),(end_row,end_col),self.board))   
     
 class Move():
     ranks_to_rows = {"1": 7, "2": 6, "3": 5, "4": 4,
-                     "5": 3, "6": 2, "7": 1, "8": 1}
+                     "5": 3, "6": 2, "7": 1, "8": 0}
     rows_to_ranks = {v: k for k, v in ranks_to_rows.items()}
 
     files_to_cols = {"a": 0, "b": 1, "c": 2, "d": 3,
