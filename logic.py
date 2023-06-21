@@ -13,8 +13,9 @@ class Logic():
         ]
         self.white_to_move = True
         self.move_log = []
+        self.move_functions = {"P":self.getPawnMoves,"R":self.getRookMoves,"N":self.getKnightMoves,\
+                               "B":self.getBishopMoves, "Q":self.getQueenMoves,"K":self.getKingMoves }
         
-
     # Takes a move and makes it (Except. castling, en-pessant, and pawn promotion)
     def makeMove(self,move):
         self.board[move.start_row][move.start_col] = "--"
@@ -42,19 +43,51 @@ class Logic():
                 turn = self.board[r][c][0]
                 if (turn == "w" and self.white_to_move) or (turn == "b" and not self.white_to_move):
                     piece = self.board[r][c][1]
-                    if piece == "P":
-                        self.getPawnMoves(r,c,possible_moves)
-                    elif piece == "R":
-                        self.getRookMoves(r,c,possible_moves)
+                    self.move_functions[piece](r,c,possible_moves) # calls the appropriate move function
         return possible_moves
     
     # Get all pawn moves                    
     def getPawnMoves(self,r,c,possible_moves):
-        pass
+        if self.white_to_move: # white pawn moves
+            if self.board[r-1][c] == "--": # one square move
+                possible_moves.append(Move((r,c),(r-1,c),self.board))
+                if r == 6 and self.board[r-2][c] == "--": # two square move
+                    possible_moves.append(Move((r,c),(r-2,c),self.board))
+            if c-1 >= 0 and self.board[r-1][c-1][0] == "b": # capture enemy piece to the left
+                possible_moves.append(Move((r,c),(r-1,c-1),self.board))
+            if c+1 <= 7 and self.board[r-1][c+1][0] == "b": # capture enemy piece to the right
+                possible_moves.append(Move((r,c),(r-1,c+1),self.board))
+        else: # black pawn moves
+            if self.board[r+1][c] == "--":
+                possible_moves.append(Move((r,c),(r+1,c),self.board))
+                if r == 1 and self.board[r+2][c] == "--": # two square move
+                    possible_moves.append(Move((r,c),(r+2,c),self.board))
+            if c-1 >= 0 and self.board[r+1][c-1][0] == "w": # capture enemy piece to the right
+                possible_moves.append(Move((r,c),(r+1,c-1),self.board))
+            if c+1 <= 7 and self.board[r+1][c+1][0] == "w": # capture enemy piece to the left
+                possible_moves.append(Move((r,c),(r+1,c+1),self.board))
     
     # Get all rook moves
     def getRookMoves(self,r,c,possible_moves):
         pass                    
+    
+    # Get all Knight moves
+    def getKnightMoves(self,r,c,possible_moves):
+        pass
+    
+    # Get all Bishop Moves
+    def getBishopMoves(self,r,c,possible_moves):
+        pass
+    
+    # Get all Queen Moves
+    def getQueenMoves(self,r,c,possible_moves):
+        self.getRookMoves(r,c,possible_moves)
+        self.getBishopMoves(r,c,possible_moves)
+    
+    # Get all King Moves
+    def getKingMoves(self,r,c,possible_moves):
+        pass
+    
     
 class Move():
     ranks_to_rows = {"1": 7, "2": 6, "3": 5, "4": 4,
@@ -78,7 +111,7 @@ class Move():
         
         self.moveID = self.start_row * 1000 + self.start_col * 100 \
                     + self.end_row * 10 + self.end_col
-        print(self.moveID)
+        #print(self.moveID)
     
     # Overriding the equals method
     def __eq__(self, other):
