@@ -23,7 +23,6 @@ def loadImages():
 The main drive for our code. This will handle user input and updating the graphics
 """
 
-
 def main():
     p.init()
     screen = p.display.set_mode((WIDTH, HEIGHT))
@@ -71,6 +70,15 @@ def main():
         drawGameState(screen, game_state)
         clock.tick(MAX_FPS)
         p.display.flip()
+        """
+        Ending the game 
+        if game_state.check_mate:
+            running = False
+        elif game_state.stale_mate:
+            running = False
+        else:
+            running = True
+        """
 
 
 """
