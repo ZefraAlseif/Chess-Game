@@ -53,12 +53,13 @@ def main():
                 if len(player_clicks) == 2: # two clicks have occured
                     move = Move(player_clicks[0],player_clicks[1],game_state.board)
                     print(move.getChessNotation())
-                    if move in valid_moves:
-                        game_state.makeMove(move)
-                        move_made = True
-                        sq_selected = () #reset user clicks
-                        player_clicks = []
-                    else:
+                    for i in range(len(valid_moves)):    
+                        if move == valid_moves[i]:
+                            game_state.makeMove(valid_moves[i])
+                            move_made = True
+                            sq_selected = () # reset user clicks
+                            player_clicks = []
+                    if not move_made:    
                         player_clicks = [sq_selected]
             # handles key presses
             elif e.type == p.KEYDOWN and e.key == p.K_z:
@@ -66,7 +67,7 @@ def main():
                 move_made = True
         if move_made:
             valid_moves = game_state.validMoves()
-            move_made = True
+            move_made = False
         drawGameState(screen, game_state)
         clock.tick(MAX_FPS)
         p.display.flip()
